@@ -57,13 +57,13 @@ def get_possible_moves(current_position: Tuple[int, int],
     moves_directions = None
 
     if action == 'N':
-        moves_directions = [(0, 1), (-1, 0), (1, 0)]
+        moves_directions = [((0, 1), 0.8), ((-1, 0), 0.1), ((1, 0), 0.1)]
     elif action == 'E':
-        moves_directions = [(1, 0), (0, 1), (0, -1)]
+        moves_directions = [((1, 0), 0.8), ((0, 1), 0.1), ((0, -1), 0.1)]
     elif action == 'W':
-        moves_directions = [(-1, 0), (0, 1), (0, -1)]
+        moves_directions = [((-1, 0), 0.8), ((0, 1), 0.1), ((0, -1), 0.1)]
     elif action == 'S':
-        moves_directions = [(0, -1), (-1, 0), (1, 0)]
+        moves_directions = [((0, -1), 0.8), ((-1, 0), 0.1), ((1, 0), 0.1)]
 
     for move_dir, prob in moves_directions:
         new_position = tuple(current + offset for current, offset in zip(current_position, move_dir))
