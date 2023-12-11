@@ -31,9 +31,11 @@ def check_value_convergence(current_values: List[List[float]],
     :param epsilon:
     :return:
     """
+    if len(current_values) == 0 or len(last_values) == 0:
+        return False
 
     for i in range(max(len(current_values), len(last_values))):
-        for j in range(max(len(current_values[i]), len(last_values[i]))):
+        for j in range(max(len(current_values[0]), len(last_values[0]))):
             try:
                 assert abs(current_values[i][j] - last_values[i][j]) < epsilon
             except (AssertionError, IndexError):
@@ -72,6 +74,7 @@ def get_possible_moves(current_position: Tuple[int, int],
         else:
             possible_moves.append((current_position, prob))
 
+    return possible_moves
 
 def compute_new_value(old_values: List[List[float]],
                       rewards: List[List[float]],
@@ -91,7 +94,19 @@ def compute_new_value(old_values: List[List[float]],
 
     for i in range(len(rewards)):
         for j in range(len(rewards[0])):
-            for (s_dash, transition) in get_possible_moves((i, j), policy[i][j], size):
-                new_values[i][j] += transition * (rewards[i][j] + gamma * old_values[s_dash[0]][s_dash[1]])
+            if is_terminal(rewards, i, j):
+                new_values[i][j] = rewards[i][j]
+
+            else:
+                for (s_dash, transition) in get_possible_moves((i, j), policy[i][j], size):
+                    new_values[i][j] += transition * (rewards[i][j] + gamma * old_values[s_dash[0]][s_dash[1]])
 
     return new_values
+
+
+def is_terminal(rewards: List[List[int]], i: int, j: int):
+    if rewards[i][j] != -1:
+        return True
+
+    else:
+        return False
