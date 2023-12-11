@@ -87,7 +87,12 @@ def policy_iteration(rewards: List[List[int]],
 rewards_ = [[100, -1, 10], [-1, -1, -1], [-1, -1, -1]]
 initial_policy_ = [['N', 'N', 'N'], ['N', 'N', 'N'], ['N', 'N', 'N']]
 
-(current_policy, policy_values) = policy_iteration(rewards_, initial_policy_, 0.99)
+# Terminal state condition must be changed
+
+# rewards_ = [[0, 0, 0, 1], [0, 0, 0, -1], [0, 0, 0, 0]]
+# initial_policy_ = [['N', 'N', 'N', 'N'], ['N', 'N', 'N', 'N'], ['N', 'N', 'N', 'N']]
+
+(current_policy, policy_values) = policy_iteration(rewards_, initial_policy_, 0.9)
 
 print(current_policy)
 

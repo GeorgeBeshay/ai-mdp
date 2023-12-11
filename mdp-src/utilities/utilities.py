@@ -76,6 +76,7 @@ def get_possible_moves(current_position: Tuple[int, int],
 
     return possible_moves
 
+
 def compute_new_value(old_values: List[List[float]],
                       rewards: List[List[float]],
                       policy: List[List[str]],
@@ -90,7 +91,7 @@ def compute_new_value(old_values: List[List[float]],
     """
 
     size = (len(rewards), len(rewards[0]))
-    new_values: List[List[float]] = [[0 for _ in range(size[0])] for _ in range(size[1])]
+    new_values: List[List[float]] = [[0 for _ in range(size[1])] for _ in range(size[0])]
 
     for i in range(len(rewards)):
         for j in range(len(rewards[0])):
