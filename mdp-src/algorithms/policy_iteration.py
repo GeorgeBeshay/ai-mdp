@@ -27,7 +27,26 @@ def evaluate_policy(policy: List[List[str]],
 def extract_policy(rewards: List[List[int]],
                    policy_values: List[List[float]],
                    gamma: float) -> List[List[str]]:
-    pass
+
+    new_policy = [["" for _ in range(len(rewards[0]))] for _ in range(len(rewards))]
+
+    for i in range(len(rewards)):
+        for j in range(len(rewards[0])):
+            max_action_value = - float('inf')
+            max_action = ''
+
+            for action in ['N', 'S', 'E', 'W']:
+                possible_moves = get_possible_moves((i, j), action, (len(rewards), len(rewards[0])))
+                current_action_value = 0
+                for (s_dash, transition) in possible_moves:
+                    current_action_value += transition * (rewards[i][j] + gamma * policy_values[s_dash[0]][s_dash[1]])
+
+                if current_action_value > max_action_value:
+                    max_action_value = current_action_value
+                    max_action = action
+
+            new_policy[i][j] = max_action
+    return new_policy
 
 
 def policy_iteration(rewards: List[List[int]],

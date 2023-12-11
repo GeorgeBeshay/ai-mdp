@@ -69,6 +69,8 @@ def get_possible_moves(current_position: Tuple[int, int],
         new_position = tuple(current + offset for current, offset in zip(current_position, move_dir))
         if 0 <= new_position[0] < board_size[0] and 0 <= new_position[1] < board_size[1]:
             possible_moves.append((new_position, prob))
+        else:
+            possible_moves.append((current_position, prob))
 
 
 def compute_new_value(old_values: List[List[float]],
@@ -90,6 +92,6 @@ def compute_new_value(old_values: List[List[float]],
     for i in range(len(rewards)):
         for j in range(len(rewards[0])):
             for (s_dash, transition) in get_possible_moves((i, j), policy[i][j], size):
-                new_values[i][j] += transition * (rewards[s_dash[0]][s_dash[1]] + gamma * old_values[s_dash[0]][s_dash[1]])
+                new_values[i][j] += transition * (rewards[i][j] + gamma * old_values[s_dash[0]][s_dash[1]])
 
     return new_values
