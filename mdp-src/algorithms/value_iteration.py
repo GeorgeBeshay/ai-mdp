@@ -71,7 +71,7 @@ def value_iteration(board: List[List[int]], V_k: List[List[float]], gamma=0.99, 
                     (actX, actY) = successor
                     # print("successor is = ", successor)
                     transition = 0.8 if first_successor else 0.1
-                    sum += transition * (board[actX][actY] + gamma * V_k[actX][actY])
+                    sum += transition * (board[i][j] + gamma * V_k[actX][actY])
                     # print(f"sum += {transition} * (board[{actX}][{actY}] + gamma * V_k[{actX}][{actY}])"
                     #       f" = sum += {transition} * ({board[actX][actY]} + {gamma} * {V_k[actX][actY]})")
                     # print("sum = ", sum)
@@ -95,7 +95,7 @@ def value_iteration(board: List[List[int]], V_k: List[List[float]], gamma=0.99, 
 
 
 # Initialize board and V_k
-example_board = [[100, -1, 10], [-1, -1, -1], [-1, -1, -1]]
+example_board = [[0, -1, 10], [-1, -1, -1], [-1, -1, -1]]
 V_0 = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
 
 # Call the value_iteration function
