@@ -71,7 +71,8 @@ def check_value_convergence(V_k: List[List[float]], V_k_next: List[List[float]],
     return True
 
 
-def value_iteration(world: List[List[int]], V_k: List[List[float]], gamma: float = 0.99, k: int = 0) -> Tuple[List[List[float]], List[List[str]]]:
+def value_iteration(world: List[List[int]], V_k: List[List[float]], gamma: float = 0.99, k: int = 0) -> Tuple[
+    List[List[float]], List[List[str]]]:
     """
         Perform value iteration to calculate the optimal values and policies for each state.
 
@@ -97,9 +98,6 @@ def value_iteration(world: List[List[int]], V_k: List[List[float]], gamma: float
             max_next_V = -float('inf')
             max_arg_s = None
             for action in ['N', 'W', 'S', 'E']:
-                # print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                # print(f"i = {i}, j = {j}")
-                # print("action is = ", action)
                 sum = 0.0
                 first_successor = True
                 for successor in get_next_moves(i, j, action):
@@ -107,21 +105,13 @@ def value_iteration(world: List[List[int]], V_k: List[List[float]], gamma: float
                     # print("successor is = ", successor)
                     transition = 0.8 if first_successor else 0.1
                     sum += transition * (world[i][j] + gamma * V_k[actX][actY])
-                    # print(f"sum += {transition} * (world[{i}][{j}] + gamma * V_k[{actX}][{actY}])"
-                    #       f"\n= sum += {transition} * ({world[i][j]} + {gamma} * {V_k[actX][actY]})")
-                    # print("sum = ", sum)
                     first_successor = False
                 if sum > max_next_V:
                     max_next_V = sum
                     max_arg_s = action
-            # print(f"max sum for state = world[{i}][{j}] is {round(max_next_V, 2)} and action is '{max_arg_s}'")
+
             V_k_next[i][j] = max_next_V
             arg_max[i][j] = max_arg_s
-
-    # for row in V_k_next:
-    #     print(" ".join("{:.2f}".format(value) for value in row))
-    # for row in arg_max:
-    #     print(" ".join(row))
 
     if check_value_convergence(V_k, V_k_next):
         return V_k_next, arg_max
@@ -129,6 +119,8 @@ def value_iteration(world: List[List[int]], V_k: List[List[float]], gamma: float
         return value_iteration(world, V_k_next, k=k + 1)
 
 
+# ------------------------------------ Separator -------------------------------------------------
+# Main Program
 while True:
     r = float(input("Enter the value of r (enter -1 to exit): "))
     if r == -1:
@@ -138,16 +130,12 @@ while True:
     example_world = [[r, -1, 10], [-1, -1, -1], [-1, -1, -1]]
     V_0 = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
 
-    print("Current Rewards =")
-    for row in example_world:
-        print(" ".join("{:.2f}".format(value) for value in row))
-
     # Call the value_iteration function
     V_k, pi_k = value_iteration(example_world, V_0)
     # Print V_k
     print("V_k =")
     for row in V_k:
-        print(" ".join("{:.2f}".format(value) for value in row))
+        print(" ".join("{:.5f}".format(value) if value % 1 != 0 else "{:.0f}".format(value) for value in row))
 
     # Print pi_k
     print("pi_k =")
