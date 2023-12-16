@@ -1,4 +1,5 @@
 from typing import List, Tuple
+import numpy as np
 
 
 def get_next_moves(currX: int, currY: int, action: str, row_length: int = 3, col_length: int = 3) -> List[
@@ -71,7 +72,7 @@ def check_value_convergence(V_k: List[List[float]], V_k_next: List[List[float]],
     return True
 
 
-def value_iteration(world: List[List[int]], V_k: List[List[float]], gamma: float = 0.99, k: int = 0) -> Tuple[
+def value_iteration(world: List[List[int]], V_k: List[List[float]], gamma: float = 0.99) -> Tuple[
     List[List[float]], List[List[str]]]:
     """
         Perform value iteration to calculate the optimal values and policies for each state.
@@ -79,48 +80,61 @@ def value_iteration(world: List[List[int]], V_k: List[List[float]], gamma: float
         :param world: 2D list representing the game world.
         :param V_k: Current values.
         :param gamma: Discount factor.
-        :param k: Iteration count.
 
         :return: Tuple containing the updated values and optimal policies.
-        """
-    # print(f"================================================= k = {k} =================================================")
+    """
     num_rows = len(world)
     num_columns = len(world[0])
-    V_k_next = [[0] * num_columns for _ in range(num_rows)]
-    arg_max = [[''] * num_columns for _ in range(num_rows)]
 
-    for i in range(num_rows):
-        for j in range(num_columns):
-            if is_terminal_state(world, i, j):
-                V_k_next[i][j] = world[i][j]  # Terminal state value
-                arg_max[i][j] = 'R'  # No action for terminal state
-                continue
-            max_next_V = -float('inf')
-            max_arg_s = None
-            for action in ['N', 'W', 'S', 'E']:
-                sum = 0.0
-                first_successor = True
-                for successor in get_next_moves(i, j, action):
-                    (actX, actY) = successor
-                    # print("successor is = ", successor)
-                    transition = 0.8 if first_successor else 0.1
-                    sum += transition * (world[i][j] + gamma * V_k[actX][actY])
-                    first_successor = False
-                if sum > max_next_V:
-                    max_next_V = sum
-                    max_arg_s = action
+    k = 0
+    max_iterations = 100  # Maximum number of iterations to avoid infinite loop
 
-            V_k_next[i][j] = max_next_V
-            arg_max[i][j] = max_arg_s
+    while True:
+        V_k_next = [[0] * num_columns for _ in range(num_rows)]
+        arg_max = [[''] * num_columns for _ in range(num_rows)]
 
-    if check_value_convergence(V_k, V_k_next):
-        return V_k_next, arg_max
-    else:
-        return value_iteration(world, V_k_next, k=k + 1)
+        for i in range(num_rows):
+            for j in range(num_columns):
+                if is_terminal_state(world, i, j):
+                    V_k_next[i][j] = world[i][j]  # Terminal state value
+                    arg_max[i][j] = 'R'  # No action for terminal state
+                    continue
+                max_next_V = -float('inf')
+                max_arg_s = None
+                for action in ['N', 'W', 'S', 'E']:
+                    sum = 0.0
+                    first_successor = True
+                    for successor in get_next_moves(i, j, action):
+                        (actX, actY) = successor
+                        transition = 0.8 if first_successor else 0.1
+                        sum += transition * (world[i][j] + gamma * V_k[actX][actY])
+                        first_successor = False
+                    if sum > max_next_V:
+                        max_next_V = sum
+                        max_arg_s = action
+
+                V_k_next[i][j] = max_next_V
+                arg_max[i][j] = max_arg_s
+
+        if check_value_convergence(V_k, V_k_next):
+            break  # Exit the loop if values have converged
+
+        # Making the V_k be the V_k_next
+        V_k = [i[:] for i in V_k_next]
+
+        k += 1
+        if k >= max_iterations:
+            break  # Exit the loop if the maximum number of iterations is reached
+
+    return V_k_next, arg_max
 
 
 # ------------------------------------ Separator -------------------------------------------------
 # Main Program
+
+# Set print options for NumPy arrays
+np.set_printoptions(5, suppress=True)
+
 while True:
     r = float(input("Enter the value of r (enter -1 to exit): "))
     if r == -1:
@@ -132,12 +146,11 @@ while True:
 
     # Call the value_iteration function
     V_k, pi_k = value_iteration(example_world, V_0)
+
     # Print V_k
     print("V_k =")
-    for row in V_k:
-        print(" ".join("{:.5f}".format(value) if value % 1 != 0 else "{:.0f}".format(value) for value in row))
+    print(np.array(V_k))
 
     # Print pi_k
     print("pi_k =")
-    for row in pi_k:
-        print(" ".join(row))
+    print(np.array(pi_k))
