@@ -126,8 +126,7 @@ def value_iteration(world: List[List[int]], V_k: List[List[float]], gamma: float
         if k >= max_iterations:
             break  # Exit the loop if the maximum number of iterations is reached
 
-    return V_k_next, arg_max
-
+    return V_k_next, arg_max, k
 
 # ------------------------------------ Separator -------------------------------------------------
 # Main Program
@@ -145,7 +144,7 @@ while True:
     V_0 = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
 
     # Call the value_iteration function
-    V_k, pi_k = value_iteration(example_world, V_0)
+    V_k, pi_k, k = value_iteration(example_world, V_0)
 
     # Print V_k
     print("V_k =")
@@ -154,3 +153,8 @@ while True:
     # Print pi_k
     print("pi_k =")
     print(np.array(pi_k))
+
+
+    # print k
+    print(f"Converged after k = {k} iterations")
+    print("---------------------------------------------------------------")
