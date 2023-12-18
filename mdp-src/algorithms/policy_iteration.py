@@ -92,8 +92,12 @@ initial_policy_ = [['N', 'N', 'N'], ['N', 'N', 'N'], ['N', 'N', 'N']]
 # rewards_ = [[0, 0, 0, 1], [0, 0, 0, -1], [0, 0, 0, 0]]
 # initial_policy_ = [['N', 'N', 'N', 'N'], ['N', 'N', 'N', 'N'], ['N', 'N', 'N', 'N']]
 
-(current_policy, policy_values) = policy_iteration(rewards_, initial_policy_, 0.9)
+(current_policy_, policy_values_) = policy_iteration(rewards_, initial_policy_, 0.9)
 
-print(current_policy)
+for row in current_policy_:
+    print(' '.join(row))
+# print(current_policy)
 
-print(policy_values)
+for row in policy_values_:
+    print(' '.join(map(str, row)))
+# print(policy_values)
